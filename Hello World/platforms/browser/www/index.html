@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <style>
+        #counter {
+            font-size: 70px;
+            text-align: center;
+            padding-bottom: 0px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div data-role="page">
+        <div data-role="main" class="ui-content">
+            <p>Watch your money grow whilst you work!</p>
+                <div class="ui-field-contain">
+                    <label for="fname">Wages:</label>
+                    <input type="number"  id="wages">
+                    <label for="lname">Hrs per week :</label>
+                    <input type="number"  id="hours">
+                </div>
+                <input type="button" id="start" data-inline="true" value="Start">
+                <input type="button" id="reset" data-inline="true" value="Reset">
+            <h1 id="counter">$0.00</h1>
+            
+            <script>
+
+                var timerVar;
+                var wagesPerSecond = 0.00;
+                $('#start')
+                    .on('tap',
+                        function() {
+                            var wages = $('#wages').val();
+                            var hrs = $('#hours').val();
+
+                            if (wages == "") {
+                                alert('no wages');
+                                return;
+                            }
+                            //wages / weeks/  hrs / mins in hr / seconds in min / hundreths seoncd
+                            wagesPerSecond = (((((wages / 48) / hrs) / 60) / 60) / 100);
+                            timerVar = setInterval(countWages, 10);
+                            $('#start').button('disable');
+                            $('#reset').button('enable');
+   
+                        });
+
+                $('#reset')
+                    .on('tap',
+                        function () {
+                            clearInterval(timerVar);
+                            $('#reset').button('disable');
+                            $('#start').button('enable');
+                            $('#counter').text('$0.00');
+                        });
+
+                
+                var totalSeconds = 0;
+                function countTimer() {
+                    ++totalSeconds;
+                    var hour = Math.floor(totalSeconds / 3600);
+                    var minute = Math.floor((totalSeconds - hour * 3600) / 60);
+                    var seconds = totalSeconds - (hour * 3600 + minute * 60);
+
+                    document.getElementById("counter").innerHTML = hour + ":" + minute + ":" + seconds;
+                }
+
+                var totalWages = 0.00;
+                function countWages() {
+                    totalWages = parseFloat(totalWages) + wagesPerSecond;
+                    totalWages = totalWages.toFixed(6);
+                    document.getElementById("counter").innerHTML = '$' + totalWages ;
+                }
+
+            </script>
+
+        </div>
+    </div>
+</body>
+</html>
